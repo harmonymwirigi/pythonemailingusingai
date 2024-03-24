@@ -1,5 +1,4 @@
 # auth.py
-
 from flask import Blueprint
 from auth.forms import LoginForm, RegistrationForm
 from flask import render_template
