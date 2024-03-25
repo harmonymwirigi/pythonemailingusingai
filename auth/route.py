@@ -17,7 +17,7 @@ def login():
         if user and user.check_password(form.password.data):
             # If authentication succeeds, redirect to the dashboard or home page
             # Redirect to another page
-            return redirect(url_for('user.dashboard'))  # Replace 'dashboard' with the appropriate endpoint
+            return redirect(url_for('dashboard'))  # Replace 'dashboard' with the appropriate endpoint
         else:
             # If authentication fails, display an error message
             flash('Invalid email or password. Please try again.', 'danger')
