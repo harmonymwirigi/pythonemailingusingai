@@ -1,41 +1,13 @@
-from flask import Blueprint, abort, session
-from auth.model import User, db
+from flask import Blueprint
+from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
-from flask import  url_for, redirect, request
-from flask_security import Security, SQLAlchemyUserDatastore, login_required, current_user
-from flask_security.utils import encrypt_password
-from flask_admin.contrib import sqla
-from flask_admin import BaseView, expose
+from auth.model import User,db
 
+admin_bp = Blueprint('admin', __name__)
+admin = Admin()
 
-adm = Blueprint("adm", __name__)
-        
-    
-admin.name = "Admin Panel"
+# Register Flask-Admin views for your models
+admin.add_view(ModelView(User, db.session))
 
-class SecuredModel(ModelView):
-    def is_accessible(self):
-        if "logged_in" in session:
-            return True
-        else:
-            abort(403)
-    def inaccessible_callback(self, name, **kwargs):
-        # redirect to login page if user doesn't have access
-        return redirect(url_for('auth.login', next=request.url))
-    
-class SecureModel(ModelView):
-    def is_accessible(self):
-        if "logged_in" in session:
-            return True
-        else:
-            abort(403)
-    def inaccessible_callback(self, name, **kwargs):
-        # redirect to login page if user doesn't have access
-        return redirect(url_for('auth.login', next=request.url))
-
-
-
-admin.add_view(AnalyticsView(name='VERIFY VEHICLE', endpoint='analytics'))
-
-
-admin.add_view(SecuredModel(User, db.session))
+# Register the blueprint with your Flask application
+admin.init_app(admin_bp)
