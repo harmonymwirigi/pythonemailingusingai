@@ -8,11 +8,6 @@ from emails.models import EmailTemplate
 from flask_admin.contrib.sqla import ModelView
 import stripe
 
-from mails.model import Mails
-from flask_admin.contrib.sqla import ModelView
-
-from auth.model import db,User
-from flask_admin import Admin
 
 
 app = Flask(__name__)
@@ -29,17 +24,10 @@ admin.add_view(ModelView(EmailTemplate, db.session))
 
 
   # Initialize Flask-Admin with your app
-admin = Admin()
-
-# Register the blueprint with your Flask application
-admin.init_app(app)
 # Register Blueprints
 app.register_blueprint(auth_bp, url_prefix='/auth')
 app.register_blueprint(user_bp, url_prefix='/user')
-# Register Flask-Admin views for your models
-admin.add_view(ModelView(User, db.session))
-admin.add_view(ModelView(Mails, db.session))
-
+# app.register_blueprint(admin_bp, url_prefix='/admin')
 
 if __name__ == "__main__":
     with app.app_context():
