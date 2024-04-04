@@ -2,20 +2,17 @@ from flask import Flask
 from flask_wtf.csrf import CSRFProtect
 from auth.route import auth_bp
 from user.route import user_bp
-<<<<<<< HEAD
 from auth.model import db, User
 from flask_admin import Admin
 from emails.models import EmailTemplate
 from flask_admin.contrib.sqla import ModelView
 import stripe
 
-=======
 from mails.model import Mails
 from flask_admin.contrib.sqla import ModelView
 
 from auth.model import db,User
 from flask_admin import Admin
->>>>>>> e337274e02ad533c64c37692876243ca90323950
 
 
 app = Flask(__name__)
@@ -39,14 +36,10 @@ admin.init_app(app)
 # Register Blueprints
 app.register_blueprint(auth_bp, url_prefix='/auth')
 app.register_blueprint(user_bp, url_prefix='/user')
-<<<<<<< HEAD
-# app.register_blueprint(admin_bp, url_prefix='/admin')
-=======
 # Register Flask-Admin views for your models
 admin.add_view(ModelView(User, db.session))
 admin.add_view(ModelView(Mails, db.session))
 
->>>>>>> e337274e02ad533c64c37692876243ca90323950
 
 if __name__ == "__main__":
     with app.app_context():
