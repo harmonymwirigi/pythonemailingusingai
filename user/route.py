@@ -6,7 +6,7 @@ from auth.model import User, db
 
 
 # Define a Flask Blueprint named 'auth_bp'
-user_bp = Blueprint('user', __name__)
+user_bp = Blueprint('users', __name__)
 
 @user_bp.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
