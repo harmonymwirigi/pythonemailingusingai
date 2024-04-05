@@ -23,11 +23,13 @@ admin.add_view(ModelView(User, db.session))
 admin.add_view(ModelView(EmailTemplate, db.session))
 
 
+
   # Initialize Flask-Admin with your app
 # Register Blueprints
 app.register_blueprint(auth_bp, url_prefix='/auth')
-app.register_blueprint(user_bp, url_prefix='/user')
+app.register_blueprint(user_bp, url_prefix='/users')
 # app.register_blueprint(admin_bp, url_prefix='/admin')
+csrf = CSRFProtect(app)
 
 if __name__ == "__main__":
     with app.app_context():

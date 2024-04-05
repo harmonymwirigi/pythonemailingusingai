@@ -240,29 +240,42 @@
                                                                     <h4 class="modal-title">Email Template</h4>
                                                                 </div>
                                                                 <div class="modal-body">
-                                                                    <form class="form-horizontal" action="{{ url_for('users.dashboard') }}">
+                                                                    <form action="{{ url_for('users.dashboard') }}" method="POST">
+                                                                        {{ formu.hidden_tag() }} <!-- Add CSRF token field for security -->
                                                                         <div class="form-group">
-                                                                            <label class="col-lg-2 control-label">Header</label>
+                                                                            {{ formu.Header.label(class="col-lg-2 control-label") }}
                                                                             <div class="col-lg-10">
-                                                                                <input type="text" placeholder="" id="inputPassword1" class="form-control">
+                                                                                {{ formu.Header(class="form-control", placeholder="") }}
+                                                                                {% for error in formu.Header.errors %}
+                                                                                    <span class="text-danger">{{ error }}</span>
+                                                                                {% endfor %}
                                                                             </div>
                                                                         </div>
                                                                         <div class="form-group">
-                                                                            <label class="col-lg-2 control-label">Body</label>
+                                                                            {{ formu.body.label(class="col-lg-2 control-label") }}
                                                                             <div class="col-lg-10">
-                                                                                <textarea rows="10" cols="30" class="form-control" id="texarea1" name="texarea"></textarea>
+                                                                                {{ formu.body(class="form-control", rows="10", cols="30") }}
+                                                                                {% for error in formu.body.errors %}
+                                                                                    <span class="text-danger">{{ error }}</span>
+                                                                                {% endfor %}
                                                                             </div>
                                                                         </div>
                                                                         <div class="form-group">
-                                                                            <label class="col-lg-2 control-label">Footer</label>
+                                                                            {{ formu.footer.label(class="col-lg-2 control-label") }}
                                                                             <div class="col-lg-10">
-                                                                                <input type="text" placeholder="" id="inputPassword1" class="form-control">
+                                                                                {{ formu.footer(class="form-control", placeholder="") }}
+                                                                                {% for error in formu.footer.errors %}
+                                                                                    <span class="text-danger">{{ error }}</span>
+                                                                                {% endfor %}
                                                                             </div>
                                                                         </div>
-
-                                                                        
+                                                                        <div class="form-group">
+                                                                            
+                                                                        </div>
+                                                                        <button type="submit" class="btn btn-primary btn-flat m-b-30 m-t-30">Submit</button>
                                                                     </form>
                                                                 </div>
+                                                                
                                                             </div>
                                                             <!-- /.modal-content -->
                                                         </div>
