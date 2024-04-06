@@ -1,0 +1,209 @@
+<!-- base.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{% block title %}Your Title Here{% endblock %}</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="http://placehold.it/64.png/000/fff">
+    <link rel="apple-touch-icon" sizes="144x144" href="http://placehold.it/144.png/000/fff">
+    <link rel="apple-touch-icon" sizes="114x114" href="http://placehold.it/114.png/000/fff">
+    <link rel="apple-touch-icon" sizes="72x72" href="http://placehold.it/72.png/000/fff">
+    <link rel="apple-touch-icon" sizes="57x57" href="http://placehold.it/57.png/000/fff">
+
+    <!-- CSS -->
+    <link href="/static/css/lib/themify-icons.css" rel="stylesheet">
+    <link href="/static/css/lib/font-awesome.min.css" rel="stylesheet">
+    <link href="/static/css/lib/menubar/sidebar.css" rel="stylesheet">
+    <link href="/static/css/lib/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/lib/Unix.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
+    
+    <!-- Additional CSS specific to the child template -->
+    {% block additional_css %}{% endblock %}
+</head>
+
+<body class="sidebar-hide">
+    <div class="content-wrap">
+        <div class="main">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-8 p-r-0 title-margin-right">
+                        <div class="page-header">
+                            <div class="page-title">
+                                <h1>Dashboard</h1>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /# column -->
+                    <div class="col-lg-4 p-l-0 title-margin-left">
+                        <div class="page-header">
+                            <div class="page-title">
+                                <ol class="breadcrumb text-right">
+                                    <li><a href="#">Dashboard</a></li>
+                                    <li class="active">App-Email</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /# column -->
+                </div>
+                <!-- /# row -->
+                <div class="main-content">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card alert">
+                                <div class="card-body">
+                                    <div class="compose-email">
+                                        <div class="mail-box">
+    <aside class="sm-side">
+        <div class="user-head">
+            
+            <div class="user-name">
+                <h5><a href="#">Admin</a></h5>
+                <span><a href="#">admin@gmail.com</a></span>
+            </div>
+        </div>
+        <div class="inbox-body text-center">
+            <a href="#myModal" data-toggle="modal" title="Compose" class="btn btn-compose"> Compose</a>
+            <!-- Modal -->
+            <div aria-hidden="true" role="dialog" tabindex="-1" id="myModal" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content text-left">
+                        <div class="modal-header">
+                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button"><i class="ti-close"></i></button>
+                            <h4 class="modal-title">Email Template</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{{ url_for('users.dashboard') }}" method="POST">
+                                {{ formu.hidden_tag() }} <!-- Add CSRF token field for security -->
+                                <div class="form-group">
+                                    {{ formu.Header.label(class="col-lg-2 control-label") }}
+                                    <div class="col-lg-10">
+                                        {{ formu.Header(class="form-control", placeholder="") }}
+                                        {% for error in formu.Header.errors %}
+                                            <span class="text-danger">{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    {{ formu.body.label(class="col-lg-2 control-label") }}
+                                    <div class="col-lg-10">
+                                        {{ formu.body(class="form-control", rows="10", cols="30") }}
+                                        {% for error in formu.body.errors %}
+                                            <span class="text-danger">{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    {{ formu.footer.label(class="col-lg-2 control-label") }}
+                                    <div class="col-lg-10">
+                                        {{ formu.footer(class="form-control", placeholder="") }}
+                                        {% for error in formu.footer.errors %}
+                                            <span class="text-danger">{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-flat m-b-30 m-t-30">Submit</button>
+                            </form>
+                        </div>
+                        
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+            <!-- /.modal -->
+        </div>
+        <ul class="inbox-nav inbox-divider">
+            <li class="active">
+                <a href="{{ url_for('users.dashboard')}}"><i class="fa fa-inbox"></i> Templates Created <span class="badge badge-success pull-right m-t-12">2</span></a>
+            </li>
+            <li>
+                <a href="{{ url_for('users.users')}}"><i class="fa fa-envelope-o"></i> Subscribed users</a>
+            </li>
+           
+          
+        </ul>
+       
+        
+
+        <div class="inbox-body text-center">
+            <div class="btn-group">
+                <a class="btn mini btn-primary" href="javascript:;">
+                    <i class="fa fa-plus"></i>
+                </a>
+            </div>
+            <div class="btn-group">
+                <a class="btn mini btn-success" href="javascript:;">
+                    <i class="fa fa-phone"></i>
+                </a>
+            </div>
+            <div class="btn-group">
+                <a class="btn mini btn-info" href="javascript:;">
+                    <i class="fa fa-cog"></i>
+                </a>
+            </div>
+        </div>
+
+    </aside>
+  
+
+        {% block content %}{% endblock %}
+    
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-lg-12">
+<div class="footer">
+<p>This dashboard was generated on <span id="date-time"></span> <a href="#" class="page-refresh">Refresh Dashboard</a></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+
+<div id="search">
+<button type="button" class="close">×</button>
+<form>
+<input type="search" value="" placeholder="type keyword(s) here" />
+<button type="submit" class="btn btn-primary">Search</button>
+</form>
+</div>
+
+
+
+
+    <!-- JS -->
+    <!-- Place your JS includes here -->
+    <script src="/static/js/lib/jquery.min.js"></script>
+    <script src="/static/js/lib/jquery.nanoscroller.min.js"></script>
+    <script src="/static/js/lib/jquery.nicescroll.min.js"></script>
+    <script src="/static/js/lib/menubar/sidebar.js"></script>
+    <script src="/static/js/lib/preloader/pace.min.js"></script>
+    <script src="/static/js/lib/bootstrap.min.js"></script>
+    <script src="/static/js/scripts.js"></script>
+    <!-- Additional JS specific to the child template -->
+    {% block additional_js %}
+    
+    
+    {% endblock %}
+</body>
+
+</html>

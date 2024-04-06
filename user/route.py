@@ -28,5 +28,13 @@ def dashboard():
         # This block will execute when the form validation fails
         print('Form validation failed. Please ches.', 'error')  # Flash an error message
     
+     # Fetch all EmailTemplate instances from the database
+    email_templates = EmailTemplate.query.all()
     # If the form is not submitted or validation fails, render the dashboard template with the form
-    return render_template('dashboard.html', formu=form)
+    return render_template('dashboard.html', formu=form, email_templates = email_templates )
+
+@user_bp.route('/users')
+def users():
+    form = Emailstemplate()
+    users = User.query.all()
+    return render_template('users.html', users = users, formu = form)
