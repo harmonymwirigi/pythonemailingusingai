@@ -1,13 +1,22 @@
-from flask import Blueprint, render_template,redirect,url_for
+from flask import Blueprint, render_template,redirect,url_for, request
 from auth.forms import LoginForm, RegistrationForm
 from auth.model import User, db
 from emails.models import EmailTemplate
 from emails.forms import Emailstemplate
+from user.forms import Generateform
+
+from openai import OpenAI
 
 user_bp = Blueprint('users', __name__)
 
+# Provide your OpenAI API key here
+api_key = "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"
+
+client = OpenAI(api_key=api_key)
+
 @user_bp.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
+    tempform = Generateform()
     form = Emailstemplate()
     if form.validate_on_submit():
         # This block will execute when the form is submitted and all fields pass validation
@@ -31,7 +40,38 @@ def dashboard():
      # Fetch all EmailTemplate instances from the database
     email_templates = EmailTemplate.query.all()
     # If the form is not submitted or validation fails, render the dashboard template with the form
-    return render_template('dashboard.html', formu=form, email_templates = email_templates )
+    return render_template('dashboard.html', formu=form, email_templates = email_templates, tempform = tempform)
+
+def retrieve_email_template_from_database(template_id):
+    # Query the database to retrieve the email template by ID
+    email_template = EmailTemplate.query.filter_by(id=template_id).first()
+    return email_template
+
+@user_bp.route('/generate_email_body', methods=['POST'])
+def generate_email_body():
+    # Retrieve template ID from request (assuming it's sent via POST)
+    template_id = int(request.form.get('template_id'))  # Convert to integer
+
+    # Fetch email template from your database based on the template ID
+    # Replace this with your actual database retrieval logic
+    email_template = retrieve_email_template_from_database(template_id)
+
+    completion = client.completions.create(
+            model="gpt-3.5-turbo-instruct",
+            prompt="Prepare an email with title news about africa body and footer in html",
+            max_tokens = 2400,
+            temperature = 1
+        )
+    response_text = completion.choices[0].text
+
+
+    
+
+    # Replace placeholders in the template with the generated content
+    email_template_with_generated_content = email_template.body.replace('{{content}}', response_text)
+
+    # You can now use the email_template_with_generated_content to send the email or return it as a response
+    return response_text
 
 @user_bp.route('/users')
 def users():
