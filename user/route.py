@@ -55,10 +55,11 @@ def generate_email_body():
     # Fetch email template from your database based on the template ID
     # Replace this with your actual database retrieval logic
     email_template = retrieve_email_template_from_database(template_id)
-
+    # Construct prompt for OpenAI API instructing to generate an email with specific parts
+    prompt = f"Generate an email with the following parts:\n\nHeader: {email_template.header}\n\nBody: {email_template.body}\n\nFooter: {email_template.footer}"
     completion = client.completions.create(
             model="gpt-3.5-turbo-instruct",
-            prompt="Prepare an email with title news about africa body and footer in html",
+            prompt=prompt,
             max_tokens = 2400,
             temperature = 1
         )
