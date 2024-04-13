@@ -1,23 +1,29 @@
-from flask import Blueprint, render_template,redirect,url_for, request
+from flask import Blueprint, render_template,redirect,url_for, request, flash
 from auth.forms import LoginForm, RegistrationForm
 from auth.model import User, db
 from emails.models import EmailTemplate
 from emails.forms import Emailstemplate
 from user.forms import Generateform
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 
 from openai import OpenAI
 
 user_bp = Blueprint('users', __name__)
 
 # Provide your OpenAI API key here
-api_key = "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"
+api_key = "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"
 
 client = OpenAI(api_key=api_key)
 
 @user_bp.route('/dashboard', methods=['GET', 'POST'])
+@login_required
 def dashboard():
     tempform = Generateform()
     form = Emailstemplate()
+    email = current_user.email
     if form.validate_on_submit():
         # This block will execute when the form is submitted and all fields pass validation
         # Access form data using form.field_name.data
@@ -40,14 +46,36 @@ def dashboard():
      # Fetch all EmailTemplate instances from the database
     email_templates = EmailTemplate.query.all()
     # If the form is not submitted or validation fails, render the dashboard template with the form
-    return render_template('dashboard.html', formu=form, email_templates = email_templates, tempform = tempform)
+    return render_template('dashboard.html', formu=form, email_templates = email_templates, tempform = tempform, email=email)
 
 def retrieve_email_template_from_database(template_id):
     # Query the database to retrieve the email template by ID
     email_template = EmailTemplate.query.filter_by(id=template_id).first()
     return email_template
+def send_email(recipient, subject, body):
+    # Configure SMTP server settings
+    smtp_server = 'smtp.gmail.com'
+    smtp_port = 587
+    sender_email = 'harmonymwirigi99@gmail.com'
+    sender_password = 'dcqw whew eoyq gyki'
 
+    # Create a MIME multipart message
+    message = MIMEMultipart()
+    message['From'] = sender_email
+    message['To'] = recipient
+    message['Subject'] = subject
+
+    # Attach the email body as plain text
+    message.attach(MIMEText(body, 'plain'))
+
+    # Connect to the SMTP server and send the email
+    with smtplib.SMTP(smtp_server, smtp_port) as server:
+        server.starttls()
+        server.login(sender_email, sender_password)
+        server.send_message(message)
+# dcqw whew eoyq gyki
 @user_bp.route('/generate_email_body', methods=['POST'])
+@login_required
 def generate_email_body():
     # Retrieve template ID from request (assuming it's sent via POST)
     template_id = int(request.form.get('template_id'))  # Convert to integer
@@ -65,16 +93,24 @@ def generate_email_body():
         )
     response_text = completion.choices[0].text
 
+    
+   # Fetch users from the database whose status is 2
+    users = User.query.filter_by(status=2).all()
+
+    # Send the generated email to each user
+    for user in users:
+        send_email(user.email, email_template.header, response_text)
+
+    # Flash a success message
+    flash("Emails sent successfully", "success")
+
+    # Redirect to the dashboard
+    return redirect(url_for('users.dashboard'))
 
     
 
-    # Replace placeholders in the template with the generated content
-    email_template_with_generated_content = email_template.body.replace('{{content}}', response_text)
-
-    # You can now use the email_template_with_generated_content to send the email or return it as a response
-    return response_text
-
 @user_bp.route('/users')
+@login_required
 def users():
     form = Emailstemplate()
     users = User.query.all()

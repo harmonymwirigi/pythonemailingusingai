@@ -7,6 +7,7 @@ from flask_admin import Admin
 from emails.models import EmailTemplate
 from flask_admin.contrib.sqla import ModelView
 import stripe
+from flask_login import LoginManager, login_user, logout_user, login_required, UserMixin
 
 
 
@@ -15,6 +16,14 @@ admin = Admin()
 app.config['SECRET_KEY'] = 'your_secret_key_here'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///mailing.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# Initialize Flask-Login
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+# User loader function required by Flask-Login
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.filter_by(id=user_id).first()
 
 # Initialize Flask extensions
 db.init_app(app)
@@ -29,7 +38,7 @@ admin.add_view(ModelView(EmailTemplate, db.session))
 app.register_blueprint(auth_bp, url_prefix='/auth')
 app.register_blueprint(user_bp, url_prefix='/users')
 # app.register_blueprint(admin_bp, url_prefix='/admin')
-csrf = CSRFProtect(app)
+
 
 if __name__ == "__main__":
     with app.app_context():

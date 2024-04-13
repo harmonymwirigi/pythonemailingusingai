@@ -1,6 +1,7 @@
 from auth.model import db
+from flask_login import UserMixin
 
-class EmailTemplate(db.Model):
+class EmailTemplate(db.Model,UserMixin):
     __tablename__ = 'email_templates'
 
     id = db.Column(db.Integer, primary_key=True)

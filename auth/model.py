@@ -20,6 +20,13 @@ class User(db.Model):
         return check_password_hash(self.password, password)
 
     def __repr__(self):
-        return self.email
+        return self.id
+    def is_active(self):
+        return True
+    def is_authenticated(self):
+        return True
+    def get_id(self):
+        return self.id
+
 
 

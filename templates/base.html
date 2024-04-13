@@ -32,6 +32,15 @@
     <div class="content-wrap">
         <div class="main">
             <div class="container-fluid">
+                <div> {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}</div>
                 <div class="row">
                     <div class="col-lg-8 p-r-0 title-margin-right">
                         <div class="page-header">
@@ -45,8 +54,8 @@
                         <div class="page-header">
                             <div class="page-title">
                                 <ol class="breadcrumb text-right">
-                                    <li><a href="#">Dashboard</a></li>
-                                    <li class="active">App-Email</li>
+                                  
+                                    <a href="{{ url_for('auth.logout') }}">Log Out</a>
                                 </ol>
                             </div>
                         </div>
@@ -66,7 +75,7 @@
             
             <div class="user-name">
                 <h5><a href="#">Admin</a></h5>
-                <span><a href="#">admin@gmail.com</a></span>
+                <span><a href="#">{{ email }}</a></span>
             </div>
         </div>
         <div class="inbox-body text-center">

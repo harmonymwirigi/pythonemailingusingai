@@ -7,10 +7,13 @@ from auth.model import User, db
 import stripe
 import datetime
 from flask import session
+from flask_login import login_user, logout_user, login_required
 key = "sk_test_51OtZ2hDpVKhl93DHXsSMIbtcVTK8DIGS5Tt5dznFjBlmy8kq1006rdkHsH272Qsy94Oo08YXXo0YgMm3TT4H0FJ500rEd5CIXd"
 product = "prod_Pk06dC0dgMFlxX"
 # This is your Stripe CLI webhook secret for testing your endpoint locally.
-endpoint_secret = 'whsec_BeSjMOri4K1Qvul40r7dpM5CdZoaJr3Z'
+endpoint_secret = 'whsec_8YBO1XbqNGKjcSSqkpHaON8zTbcozZci'
+
+
 
 def create_customer(name, email, key):
     # Initialize the Stripe API with your secret key
@@ -143,8 +146,11 @@ def login():
             # Check if the password is correct
             if user.check_password(form.password.data):
                 if user.is_admin:
+                    login_user(user)
+                    
                     # If the user is an admin, redirect to the admin dashboard
-                    return redirect(url_for('admin.index'))  # Replace 'admin.dashboard' with the appropriate endpoint
+                    return redirect(url_for('users.dashboard'))
+                      # Replace 'admin.dashboard' with the appropriate endpoint
                 else:
                     # If the user is not an admin, redirect to the user dashboard
                     return redirect(url_for('users.dashboard'))  # Replace 'user.dashboard' with the appropriate endpoint
@@ -156,8 +162,16 @@ def login():
     # Render the login template with the login form
     return render_template('login.html', form=form)
 
+@auth_bp.route('/logout')
+@login_required
+def logout():
+    # Log out the user
+    logout_user()
+    return redirect(url_for('auth.login'))
+
 
 @auth_bp.route('/register', methods=['GET', 'POST'])
+
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
@@ -169,7 +183,7 @@ def register():
         unit_amount = 10000  # Replace with your desired unit amount in cents
         created_price_id = create_default_price_and_update_product(product, unit_amount, key)
         # Example usage:
-        success_url = "https://df4c-102-219-208-254.ngrok-free.app/auth/login"
+        success_url = "https://ab4f-197-232-77-163.ngrok-free.app/auth/login"
 
         
 
@@ -210,10 +224,6 @@ def register_admin():
         db.session.add(new_admin)
         db.session.commit()
         flash('Admin user created successfully!', 'success')
-        return redirect(url_for('user.dashboard'))
+        return redirect(url_for('users.dashboard'))
     return render_template('admin_register.html', form=form)
 
-# Define a route for the logout functionality
-@auth_bp.route('/logout')
-def logout():
-    return 'Logout Page'
