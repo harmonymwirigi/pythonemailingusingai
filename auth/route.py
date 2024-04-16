@@ -162,14 +162,14 @@ def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         # Hash the password before storing it in the database
-        hashed_password = generate_password_hash(form.password.data)
+        
         # Create a new user instance with form data and hashed password
         created_customer = create_customer(form.username.data, form.email.data, key)
         
         unit_amount = 10000  # Replace with your desired unit amount in cents
         created_price_id = create_default_price_and_update_product(product, unit_amount, key)
         # Example usage:
-        success_url = "https://df4c-102-219-208-254.ngrok-free.app/auth/login"
+        success_url = "https://df4c-102-219-208-254.ngrok-free.app/auth/sucess"
 
         
 
@@ -178,7 +178,7 @@ def register():
         new_user = User(
             username=form.username.data,
             email=form.email.data,
-            password=hashed_password,
+            
             customer_id= created_customer,
             amount = unit_amount, 
             status= 1
@@ -212,6 +212,11 @@ def register_admin():
         flash('Admin user created successfully!', 'success')
         return redirect(url_for('user.dashboard'))
     return render_template('admin_register.html', form=form)
+
+@auth_bp.route('/success')
+def success():
+
+    return render_template('success.html')
 
 # Define a route for the logout functionality
 @auth_bp.route('/logout')

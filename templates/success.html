@@ -26,6 +26,24 @@
     <link href="/static/css/lib/bootstrap.min.css" rel="stylesheet">
     <link href="/static/css/lib/unix.css" rel="stylesheet">
     <link href="/static/css/style.css" rel="stylesheet">
+    <style>
+        .success-icon {
+    border: 2px solid #5cb85c; /* green color */
+    border-radius: 50%; /* make it round */
+    width: 100px; /* adjust width and height as needed */
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px auto; /* adjust margin as needed */
+}
+
+.success-icon i {
+    font-size: 50px; /* adjust icon size as needed */
+    color: #5cb85c; /* green color */
+}
+
+    </style>
 </head>
 
 <body class="bg-primary">
@@ -39,40 +57,18 @@
                             <a href="index.html"><span>Mailing Solution</span></a>
                         </div>
                         <div class="login-form">
-                            <h4>Register</h4>
-                            <form method="POST">
-                                {{ form.hidden_tag() }}
-                                <div class="form-group">
-                                    {{ form.username.label(class="form-label") }}
-                                    {{ form.username(class="form-control", placeholder="User Name") }}
-                                    {% for error in form.username.errors %}
-                                    <span class="text-danger">{{ error }}</span>
-                                    {% endfor %}
-                                </div>
-                                <div class="form-group">
-                                    {{ form.email.label(class="form-label") }}
-                                    {{ form.email(class="form-control", placeholder="Email Address") }}
-                                    {% for error in form.email.errors %}
-                                    <span class="text-danger">{{ error }}</span>
-                                    {% endfor %}
-                                </div>
-                               
-                                <div class="form-group form-check">
-                                    {{ form.agree_terms(class="form-check-input") }}
-                                    <label class="form-check-label">{{ form.agree_terms.label }}</label>
-                                </div>
-                                <button type="submit" class="btn btn-primary">Register</button>
-                            </form>
-                            <div class="mt-3">
-                                <p>Already have an account? <a href="#">Sign in</a></p>
+                            <h4>Payment successfull</h4>
+                            <div class="success-icon">
+                                <i class="fa fa-check"></i>
                             </div>
+                            <h4>You will be recieving email from our site for any news on technology. Congratulations</h4>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
+    
 </body>
 
 </html>
