@@ -171,12 +171,10 @@ def logout():
 
 
 @auth_bp.route('/register', methods=['GET', 'POST'])
-
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         # Hash the password before storing it in the database
-        hashed_password = generate_password_hash(form.password.data)
         # Create a new user instance with form data and hashed password
         created_customer = create_customer(form.username.data, form.email.data, key)
         
@@ -192,7 +190,6 @@ def register():
         new_user = User(
             username=form.username.data,
             email=form.email.data,
-            password=hashed_password,
             customer_id= created_customer,
             amount = unit_amount, 
             status= 1
@@ -224,6 +221,6 @@ def register_admin():
         db.session.add(new_admin)
         db.session.commit()
         flash('Admin user created successfully!', 'success')
-        return redirect(url_for('users.dashboard'))
+        return redirect(url_for('auth.login'))
     return render_template('admin_register.html', form=form)
 

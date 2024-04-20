@@ -73,6 +73,14 @@ def send_email(recipient, subject, body):
         server.starttls()
         server.login(sender_email, sender_password)
         server.send_message(message)
+
+@user_bp.route('/config', methods=['POST'])
+@login_required
+def config():
+
+    # Redirect to the dashboard
+    return redirect(url_for('users.dashboard'))
+
 # dcqw whew eoyq gyki
 @user_bp.route('/generate_email_body', methods=['POST'])
 @login_required

@@ -54,7 +54,7 @@
                         <div class="page-header">
                             <div class="page-title">
                                 <ol class="breadcrumb text-right">
-                                  
+                                    <a href="#configmodal" style="width: auto;height: auto;" data-toggle="modal" title="Compose" class="btn btn-compose"> Config</a>
                                     <a href="{{ url_for('auth.logout') }}">Log Out</a>
                                 </ol>
                             </div>
@@ -131,6 +131,37 @@
                 <!-- /.modal-dialog -->
             </div>
             <!-- /.modal -->
+            <!-- config modal -->
+            <div aria-hidden="true" role="dialog" tabindex="-1" id="configmodal" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content text-left">
+                        <div class="modal-header">
+                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button"><i class="ti-close"></i></button>
+                            <h4 class="modal-title">Email Template</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{{ url_for('users.dashboard') }}" method="POST">
+                                {{ formu.hidden_tag() }} <!-- Add CSRF token field for security -->
+                                <div class="form-group">
+                                    {{ formu.Header.label(class="col-lg-2 control-label") }}
+                                    <div class="col-lg-10">
+                                        {{ formu.Header(class="form-control", placeholder="") }}
+                                        {% for error in formu.Header.errors %}
+                                            <span class="text-danger">{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                               
+                                <button type="submit" class="btn btn-primary btn-flat m-b-30 m-t-30">Submit</button>
+                            </form>
+                        </div>
+                        
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+            <!-- config modal -->
         </div>
         <ul class="inbox-nav inbox-divider">
             <li class="active">
