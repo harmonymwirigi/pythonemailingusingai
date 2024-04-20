@@ -54,7 +54,9 @@
                         <div class="page-header">
                             <div class="page-title">
                                 <ol class="breadcrumb text-right">
+                                    {% if current_user.openai_key == None  %}
                                     <a href="#configmodal" style="width: auto;height: auto;" data-toggle="modal" title="Compose" class="btn btn-compose"> Config</a>
+                                    {% endif %}
                                     <a href="{{ url_for('auth.logout') }}">Log Out</a>
                                 </ol>
                             </div>
@@ -79,8 +81,12 @@
             </div>
         </div>
         <div class="inbox-body text-center">
+            {% if current_user.openai_key == None  %}
+            <p>Kindly Configure Your Open API Key to conposes email template</p>
+            {% else %}
             <a href="#myModal" data-toggle="modal" title="Compose" class="btn btn-compose"> Compose</a>
             <!-- Modal -->
+            {% endif %}
             <div aria-hidden="true" role="dialog" tabindex="-1" id="myModal" class="modal fade">
                 <div class="modal-dialog">
                     <div class="modal-content text-left">
@@ -137,16 +143,16 @@
                     <div class="modal-content text-left">
                         <div class="modal-header">
                             <button aria-hidden="true" data-dismiss="modal" class="close" type="button"><i class="ti-close"></i></button>
-                            <h4 class="modal-title">Email Template</h4>
+                            <h4 class="modal-title">Open Ai Key</h4>
                         </div>
                         <div class="modal-body">
-                            <form action="{{ url_for('users.dashboard') }}" method="POST">
-                                {{ formu.hidden_tag() }} <!-- Add CSRF token field for security -->
+                            <form action="{{ url_for('users.config') }}" method="POST">
+                                {{ keyform.hidden_tag() }} <!-- Add CSRF token field for security -->
                                 <div class="form-group">
-                                    {{ formu.Header.label(class="col-lg-2 control-label") }}
+                                    {{ keyform.key.label(class="col-lg-2 control-label") }}
                                     <div class="col-lg-10">
-                                        {{ formu.Header(class="form-control", placeholder="") }}
-                                        {% for error in formu.Header.errors %}
+                                        {{ keyform.key(class="form-control", placeholder="") }}
+                                        {% for error in keyform.key.errors %}
                                             <span class="text-danger">{{ error }}</span>
                                         {% endfor %}
                                     </div>

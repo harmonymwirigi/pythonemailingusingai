@@ -6,3 +6,6 @@ from wtforms.validators import DataRequired, Email, EqualTo, Length
 
 class Generateform(FlaskForm):
     id = IntegerField('tempid')
+
+class OpenAiform(FlaskForm):
+    key = StringField('Open Ai Key', validators=[DataRequired()])

@@ -3,27 +3,23 @@ from auth.forms import LoginForm, RegistrationForm
 from auth.model import User, db
 from emails.models import EmailTemplate
 from emails.forms import Emailstemplate
-from user.forms import Generateform
+from user.forms import Generateform,OpenAiform
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-import os
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 
 from openai import OpenAI
 
 user_bp = Blueprint('users', __name__)
 
-# Provide your OpenAI API key here
-api_key = os.get.env('api_key')
-
-client = OpenAI(api_key=api_key)
 
 @user_bp.route('/dashboard', methods=['GET', 'POST'])
 @login_required
 def dashboard():
     tempform = Generateform()
     form = Emailstemplate()
+    keyform = OpenAiform()
     email = current_user.email
     if form.validate_on_submit():
         # This block will execute when the form is submitted and all fields pass validation
@@ -47,7 +43,7 @@ def dashboard():
      # Fetch all EmailTemplate instances from the database
     email_templates = EmailTemplate.query.all()
     # If the form is not submitted or validation fails, render the dashboard template with the form
-    return render_template('dashboard.html', formu=form, email_templates = email_templates, tempform = tempform, email=email)
+    return render_template('dashboard.html', formu=form, email_templates = email_templates, tempform = tempform, email=email, keyform=keyform)
 
 def retrieve_email_template_from_database(template_id):
     # Query the database to retrieve the email template by ID
@@ -78,9 +74,14 @@ def send_email(recipient, subject, body):
 @user_bp.route('/config', methods=['POST'])
 @login_required
 def config():
-
-    # Redirect to the dashboard
+    form = OpenAiform()
+    if form.validate_on_submit():
+        key = form.key.data
+        # Assuming you have SQLAlchemy and a User model
+        current_user.openai_key = key
+        db.session.commit()  # Save the changes to the database
     return redirect(url_for('users.dashboard'))
+
 
 # dcqw whew eoyq gyki
 @user_bp.route('/generate_email_body', methods=['POST'])
@@ -88,6 +89,10 @@ def config():
 def generate_email_body():
     # Retrieve template ID from request (assuming it's sent via POST)
     template_id = int(request.form.get('template_id'))  # Convert to integer
+    # Provide your OpenAI API key here
+    api_key = current_user.openai_key
+
+    client = OpenAI(api_key=api_key)
 
     # Fetch email template from your database based on the template ID
     # Replace this with your actual database retrieval logic
@@ -122,5 +127,6 @@ def generate_email_body():
 @login_required
 def users():
     form = Emailstemplate()
+    keyform=OpenAiform()
     users = User.query.all()
-    return render_template('users.html', users = users, formu = form)
+    return render_template('users.html', users = users, formu = form,keyform=keyform)
