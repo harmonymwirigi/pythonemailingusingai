@@ -14,6 +14,10 @@ from openai import OpenAI
 
 user_bp = Blueprint('users', __name__)
 
+# Provide your OpenAI API key here
+api_key = os.get.env('api_key')
+
+client = OpenAI(api_key=api_key)
 
 @user_bp.route('/dashboard', methods=['GET', 'POST'])
 @login_required
