@@ -7,6 +7,7 @@ from user.forms import Generateform
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+import os
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 
 from openai import OpenAI
@@ -14,7 +15,7 @@ from openai import OpenAI
 user_bp = Blueprint('users', __name__)
 
 # Provide your OpenAI API key here
-api_key = "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"
+api_key = os.get.env('api_key')
 
 client = OpenAI(api_key=api_key)
 
