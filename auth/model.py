@@ -1,10 +1,13 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import declarative_base
 import stripe
 from werkzeug.security import check_password_hash
 
+Base  = declarative_base()
+
 db = SQLAlchemy()
 
-class User(db.Model):
+class User(db.Model,Base):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)

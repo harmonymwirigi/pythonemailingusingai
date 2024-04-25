@@ -1,4 +1,4 @@
-from auth.model import db
+from auth.model import db,Base
 from flask_login import UserMixin
 
 class EmailTemplate(db.Model,UserMixin):

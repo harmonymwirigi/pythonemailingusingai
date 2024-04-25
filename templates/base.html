@@ -54,9 +54,7 @@
                         <div class="page-header">
                             <div class="page-title">
                                 <ol class="breadcrumb text-right">
-                                    {% if current_user.openai_key == None  %}
-                                    <a href="#configmodal" style="width: auto;height: auto;" data-toggle="modal" title="Compose" class="btn btn-compose"> Config</a>
-                                    {% endif %}
+                                   
                                     <a href="{{ url_for('auth.logout') }}">Log Out</a>
                                 </ol>
                             </div>
@@ -176,13 +174,22 @@
             <li>
                 <a href="{{ url_for('users.users')}}"><i class="fa fa-envelope-o"></i> Subscribed users</a>
             </li>
+            <li>
+                {% if current_user.openai_key == None  %}
+                <!-- <a  style="width: auto;height: auto;"> Config</a> -->
+                
+                <a href="#configmodal"  data-toggle="modal" title="Compose"></i> Config</a>
+                {% else %}
+                <a href="#configmodal"  data-toggle="modal" title="Compose" ><i class="fa fa-edit"></i> Update</a>
+                {% endif %}
+            </li>
            
           
         </ul>
        
         
 
-        <div class="inbox-body text-center">
+        <!-- <div class="inbox-body text-center">
             <div class="btn-group">
                 <a class="btn mini btn-primary" href="javascript:;">
                     <i class="fa fa-plus"></i>
@@ -198,7 +205,7 @@
                     <i class="fa fa-cog"></i>
                 </a>
             </div>
-        </div>
+        </div> -->
 
     </aside>
   

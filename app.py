@@ -41,6 +41,7 @@ app.register_blueprint(user_bp, url_prefix='/users')
 
 
 if __name__ == "__main__":
+    
     with app.app_context():
         # Create database tables
         db.create_all()

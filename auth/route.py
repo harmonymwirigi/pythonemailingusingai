@@ -163,7 +163,7 @@ def login():
     return render_template('login.html', form=form)
 
 @auth_bp.route('/logout')
-@login_required
+
 def logout():
     # Log out the user
     logout_user()
