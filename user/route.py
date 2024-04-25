@@ -128,5 +128,5 @@ def generate_email_body():
 def users():
     form = Emailstemplate()
     keyform=OpenAiform()
-    users = User.query.all()
+    users =  User.query.filter_by(is_admin = False).all()
     return render_template('users.html', users = users, formu = form,keyform=keyform)

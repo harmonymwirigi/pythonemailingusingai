@@ -90,7 +90,7 @@
                     <div class="modal-content text-left">
                         <div class="modal-header">
                             <button aria-hidden="true" data-dismiss="modal" class="close" type="button"><i class="ti-close"></i></button>
-                            <h4 class="modal-title">Config you api key</h4>
+                            <h4 class="modal-title">Create email Template</h4>
                         </div>
                         <div class="modal-body">
                             <form action="{{ url_for('users.dashboard') }}" method="POST">
@@ -169,10 +169,28 @@
         </div>
         <ul class="inbox-nav inbox-divider">
             <li class="active">
-                <a href="{{ url_for('users.dashboard')}}"><i class="fa fa-inbox"></i> Templates Created <span class="badge badge-success pull-right m-t-12">2</span></a>
+                <a href="{{ url_for('users.dashboard')}}"><i class="fa fa-inbox"></i> Templates Created <span class="badge badge-success pull-right m-t-12">
+
+                    {% set num_templates = email_templates|length %}
+                    {% if num_templates > 0 %}
+    
+{{ num_templates }}
+    
+    {% endif %}
+                </span></a>
             </li>
             <li>
-                <a href="{{ url_for('users.users')}}"><i class="fa fa-envelope-o"></i> Subscribed users</a>
+                <a href="{{ url_for('users.users')}}"><i class="fa fa-envelope-o"></i> Subscribed users
+                    <span class="badge badge-success pull-right m-t-12">
+
+                        {% set num_users = users|length %}
+                        {% if num_users > 0 %}
+        
+    {{ num_users }}
+        
+        {% endif %}
+                    </span>
+                </a>
             </li>
             <li>
                 {% if current_user.openai_key == None  %}

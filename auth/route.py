@@ -162,8 +162,11 @@ def login():
     # Render the login template with the login form
     return render_template('login.html', form=form)
 
-@auth_bp.route('/logout')
+@auth_bp.route('/success')
+def success():
+    return render_template('success.html')
 
+@auth_bp.route('/logout')
 def logout():
     # Log out the user
     logout_user()

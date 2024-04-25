@@ -44,8 +44,8 @@
                                                               
                                                                 <td class="view-message  dont-show">{{ user.username }}</td>
                                                                 <td class="view-message">{{ user.email }}</td>
-                                                                <td class="view-message  dont-show">{{ user.amount }}</td>
-                                                                <td class="view-message  dont-show">View</td>
+                                                                <td class="view-message  dont-show">${{ user.amount }}</td>
+                                                                <td class="view-message  dont-show"><a class="btn btn-success"><i class="fa fa-eye"></i>view</a></td>
                                                             </tr> 
                                                             {% endfor %}
                                                         </tbody>
