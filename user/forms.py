@@ -9,3 +9,6 @@ class Generateform(FlaskForm):
 
 class OpenAiform(FlaskForm):
     key = StringField('Open Ai Key', validators=[DataRequired()])
+    
+class CompaignForm(FlaskForm):
+    name = StringField('Compain Title', validators=[DataRequired()])

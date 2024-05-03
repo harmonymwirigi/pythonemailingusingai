@@ -1,0 +1,62 @@
+<!-- dashboard.html -->
+{% extends "compaignbase.html" %}
+{% block title %}
+    Admin Dashboard
+{% endblock %}
+
+
+   
+   
+    
+                                            <!-- /# sidebar -->
+                                            {% block content %}
+                                            <aside class="lg-side">
+                                                <div class="inbox-head">
+                                                   
+                                                    <form action="#" class="pull-right position">
+                                                        <div class="input-append inner-append">
+                                                            <input type="text" class="sr-input" placeholder="Search Mail">
+                                                            <button class="btn sr-btn append-btn" type="button"><i class="fa fa-search"></i></button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                <div class="mail-option">
+                                                    
+
+                                                    
+                                                    
+                                                    
+
+                                                    
+                                                </div>
+                                                <div class="table-responsive">
+                                                    <table class="table table-inbox table-hover table-responsive">
+                                                        <tr class="unread">
+                                                           
+                                                            <th class="view-message  dont-show">Header</th>
+                                                            <th class="view-message">Body</th>
+                                                            <th class="view-message  dont-show">Footer</th>
+                                                            <th class="view-message  dont-show">Action</th>
+                                                        </th>
+                                                        <tbody>
+                                                            {% for email_template in email_templates %}
+                                                            <tr class="unread">
+                                                                <td class="view-message dont-show">{{ email_template.header }}</td>
+                                                                <td class="view-message">{{ email_template.body }}</td>
+                                                                <td class="view-message dont-show">{{ email_template.footer }}</td>
+                                                                <td class="view-message dont-show">
+                                                                    <form action="{{ url_for('users.generate_email_body') }}" method="post">
+                                                                        {{ tempform.hidden_tag() }}
+                                                                        <input type="hidden" name="template_id" value="{{ email_template.id }}">
+                                                                        <button type="submit" class="btn btn-success">Generate Email</button>
+                                                                    </form>
+                                                                </td>
+                                                            </tr>
+                                                            {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                            </aside>
+                                            {% endblock %}
+                                       

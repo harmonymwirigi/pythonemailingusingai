@@ -93,7 +93,7 @@
 .card {
   background: #ffffff;
   margin: 7.5px 0px 7.5px 0px;
-  padding: 20px;
+  padding: 0px;
   border-radius: 0px;
 }
 .card-header h4 {
@@ -1989,6 +1989,9 @@ footer p {
 .has-error .form-control.active {
   box-shadow: none;
 }
+.control-label{
+  color:#000;
+}
 .has-default .control-label {
   color: #878787;
 }
@@ -2101,23 +2104,30 @@ label {
   display: table-cell;
   float: none;
   height: 100%;
-  padding: 0;
+  padding: 20px;
   vertical-align: top;
 }
+.text-white{
+ color:#ffffff;
+}
 .mail-box .sm-side {
-  background: #ffffff;
+  background: #6a6a6a;
   border-radius: 4px 0 0 4px;
   width: 25%;
+  margin: 10px;
+  color: #ffffff;
 }
 .mail-box .sm-side .user-head {
-  background: #ffffff;
+  
   border-radius: 4px 0 0;
   color: #252525;
   min-height: 80px;
   padding: 10px;
 }
-.mail-box .lg-side {
-  background: none repeat scroll 0 0 #ffffff;
+mail-box .lg-side {
+  padding: 20px;
+  margin: 10px;
+  background:  #6a6a6a;
   border-radius: 0 4px 4px 0;
   width: 75%;
 }
@@ -2191,12 +2201,15 @@ ul.inbox-nav li {
   width: 100%;
 }
 ul.inbox-nav li a {
-  color: #6a6a6a;
+  color: #ffffff;
   display: inline-block;
   line-height: 45px;
   padding: 0 20px;
   width: 100%;
   font-family: 'MontserratLight', sans-serif;
+  background: #eef1f6;
+  color: #6a6a6a;
+}
 }
 ul.inbox-nav li a:hover {
   background: #eef1f6;
@@ -3642,7 +3655,7 @@ p {
   transform: rotate(180deg);
 }
 .content-wrap {
-  margin-top: 55px;
+  margin-top: 5 px;
 }
 .alert h4 {
   color: #252525;

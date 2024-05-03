@@ -3,7 +3,8 @@ from auth.forms import LoginForm, RegistrationForm
 from auth.model import User, db
 from emails.models import EmailTemplate
 from emails.forms import Emailstemplate
-from user.forms import Generateform,OpenAiform
+from compaign.model import Compaign
+from user.forms import Generateform,OpenAiform, CompaignForm
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -20,6 +21,7 @@ def dashboard():
     tempform = Generateform()
     form = Emailstemplate()
     keyform = OpenAiform()
+    compainform = CompaignForm()
     email = current_user.email
     if form.validate_on_submit():
         # This block will execute when the form is submitted and all fields pass validation
@@ -42,8 +44,9 @@ def dashboard():
     
      # Fetch all EmailTemplate instances from the database
     email_templates = EmailTemplate.query.all()
+    compains = Compaign.query.filter_by(owner_id = current_user.id).all()
     # If the form is not submitted or validation fails, render the dashboard template with the form
-    return render_template('dashboard.html', formu=form, email_templates = email_templates, tempform = tempform, email=email, keyform=keyform)
+    return render_template('dashboard.html', formu=form, email_templates = email_templates, tempform = tempform, email=email, keyform=keyform, compainform = compainform, compains = compains)
 
 def retrieve_email_template_from_database(template_id):
     # Query the database to retrieve the email template by ID
@@ -79,8 +82,25 @@ def config():
         key = form.key.data
         # Assuming you have SQLAlchemy and a User model
         current_user.openai_key = key
-        db.session.commit()  # Save the changes to the database
-    return redirect(url_for('users.dashboard'))
+        db.session.commit()  # Save the changes to t
+        return redirect(url_for('users.dashboard'))
+
+@user_bp.route('/addcompaign', methods = ['POST'])
+@login_required
+def addcompaign():
+    form = CompaignForm()
+    if  form.validate_on_submit():
+        name = form.name.data
+        compain = Compaign(
+            name = name,
+            owner_id = current_user.id
+        )
+        # Add the new user to the database session
+        db.session.add(compain)
+        # Commit changes to the database
+        db.session.commit()
+        # Redirect to the login page after successful registration
+        return redirect(url_for('users.dashboard'))
 
 
 # dcqw whew eoyq gyki
@@ -128,5 +148,6 @@ def generate_email_body():
 def users():
     form = Emailstemplate()
     keyform=OpenAiform()
-    users =  User.query.filter_by(is_admin = False).all()
-    return render_template('users.html', users = users, formu = form,keyform=keyform)
+    compainform = CompaignForm()
+    users =  User.query.all()
+    return render_template('users.html', users = users, formu = form,keyform=keyform, compainform = compainform)

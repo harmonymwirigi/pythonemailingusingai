@@ -2,7 +2,9 @@ from flask import Flask
 from flask_wtf.csrf import CSRFProtect
 from auth.route import auth_bp
 from user.route import user_bp
-from auth.model import db, User
+from compaign.route import compaigns
+from auth.model import db, User, Adminuser
+from compaign.model import Compaign
 from flask_admin import Admin
 from emails.models import EmailTemplate
 from flask_admin.contrib.sqla import ModelView
@@ -23,20 +25,21 @@ login_manager.init_app(app)
 # User loader function required by Flask-Login
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.filter_by(id=user_id).first()
+    return Adminuser.query.filter_by(id=user_id).first()
 
 # Initialize Flask extensions
 db.init_app(app)
 admin.init_app(app)
 admin.add_view(ModelView(User, db.session))
 admin.add_view(ModelView(EmailTemplate, db.session))
-
+admin.add_view(ModelView(Compaign, db.session))
 
 
   # Initialize Flask-Admin with your app
 # Register Blueprints
 app.register_blueprint(auth_bp, url_prefix='/auth')
 app.register_blueprint(user_bp, url_prefix='/users')
+app.register_blueprint(compaigns, url_prefix='/compaign')
 # app.register_blueprint(admin_bp, url_prefix='/admin')
 
 

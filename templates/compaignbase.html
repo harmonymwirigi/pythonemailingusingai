@@ -88,7 +88,7 @@
             </div>
         </div>
         <div class="inbox-body text-center">
-            {% if current_user.openai_key == None  %}
+            {% if check_key == None  %}
             <p class="text-white">Kindly Configure Your Open API Key to conposes email template</p>
             {% else %}
             <a href="#myModal" data-toggle="modal" title="Compose" class="btn btn-compose"> Compose</a>
@@ -222,7 +222,7 @@
                 </span></a>
             </li>
             <li class="active">
-                <a href="{{ url_for('users.users')}}"><i class="fa fa-envelope-o"></i> Subscribed users
+                <a href="{{ url_for('compaigns.users', id=compaign_id) }}"  ><i class="fa fa-envelope-o"></i> Subscribed users
                     <span class="badge badge-success pull-right m-t-12">
 
                         {% set num_users = users|length %}

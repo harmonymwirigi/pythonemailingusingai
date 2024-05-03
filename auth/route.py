@@ -3,7 +3,7 @@ from flask import Blueprint, redirect,render_template,url_for,request, flash, ab
 from auth.forms import LoginForm, RegistrationForm
 from werkzeug.security import generate_password_hash
 from flask import render_template
-from auth.model import User, db
+from auth.model import User, db,Adminuser
 import stripe
 import datetime
 from flask import session
@@ -15,13 +15,12 @@ endpoint_secret = 'whsec_8YBO1XbqNGKjcSSqkpHaON8zTbcozZci'
 
 
 
-def create_customer(name, email, key):
+def create_customer(email, key):
     # Initialize the Stripe API with your secret key
     stripe.api_key = key
 
     # Create a customer
     customer = stripe.Customer.create(
-        name=name,
         email=email,
     )
 
@@ -141,19 +140,16 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         # Retrieve the user based on the provided email
-        user = User.query.filter_by(email=form.email.data).first()
+        user = Adminuser.query.filter_by(email=form.email.data).first()
         if user:
             # Check if the password is correct
             if user.check_password(form.password.data):
-                if user.is_admin:
+                
                     login_user(user)
                     
                     # If the user is an admin, redirect to the admin dashboard
                     return redirect(url_for('users.dashboard'))
-                      # Replace 'admin.dashboard' with the appropriate endpoint
-                else:
-                    # If the user is not an admin, redirect to the user dashboard
-                    return redirect(url_for('users.dashboard'))  # Replace 'user.dashboard' with the appropriate endpoint
+                      # Replace 'admin.dashboard' with the appropriate endpoinT
             else:
                 flash('Incorrect password. Please try again.', 'danger')
         else:
@@ -179,19 +175,18 @@ def register():
     if form.validate_on_submit():
         # Hash the password before storing it in the database
         # Create a new user instance with form data and hashed password
-        created_customer = create_customer(form.username.data, form.email.data, key)
+        created_customer = create_customer(form.email.data, key)
         
         unit_amount = 10000  # Replace with your desired unit amount in cents
         created_price_id = create_default_price_and_update_product(product, unit_amount, key)
         # Example usage:
-        success_url = "https://ab4f-197-232-77-163.ngrok-free.app/auth/login"
+        success_url = "http://127.0.0.1:5000/auth/success"
 
         
 
         quantity = 1  # Optional, default is 1
         checkout_session_url = create_checkout_session(success_url, created_price_id,key,customer=created_customer, quantity=quantity)
         new_user = User(
-            username=form.username.data,
             email=form.email.data,
             customer_id= created_customer,
             amount = unit_amount, 
@@ -215,11 +210,10 @@ def register_admin():
     form = RegistrationForm()
     if form.validate_on_submit():
         hashed_password = generate_password_hash(form.password.data)
-        new_admin = User(
+        new_admin = Adminuser(
             username=form.username.data,
             email=form.email.data,
-            password=hashed_password,
-            is_admin=True
+            password=hashed_password
         )
         db.session.add(new_admin)
         db.session.commit()
