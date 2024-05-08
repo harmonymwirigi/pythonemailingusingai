@@ -4,8 +4,10 @@ from auth.model import User, db
 from emails.models import EmailTemplate
 from emails.forms import Emailstemplate
 from compaign.model import Compaign
+import secrets
 from user.forms import Generateform,OpenAiform, CompaignForm
 import smtplib
+import hashlib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
@@ -31,7 +33,7 @@ def dashboard():
         footer = form.footer.data
         print(footer)
         # Create a new EmailTemplate instance
-        email_template = EmailTemplate(header=header, body=body, footer=footer)
+        email_template = EmailTemplate(header=header, body=body, footer=footer, owner_id = current_user.id)
         # Add the new EmailTemplate instance to the database session
         db.session.add(email_template)
         # Commit the changes to the database
@@ -43,7 +45,7 @@ def dashboard():
         print('Form validation failed. Please ches.', 'error')  # Flash an error message
     
      # Fetch all EmailTemplate instances from the database
-    email_templates = EmailTemplate.query.all()
+    email_templates = EmailTemplate.query.filter_by(owner_id = current_user.id, compaign = None).all()
     compains = Compaign.query.filter_by(owner_id = current_user.id).all()
     # If the form is not submitted or validation fails, render the dashboard template with the form
     return render_template('dashboard.html', formu=form, email_templates = email_templates, tempform = tempform, email=email, keyform=keyform, compainform = compainform, compains = compains)
@@ -84,16 +86,44 @@ def config():
         current_user.openai_key = key
         db.session.commit()  # Save the changes to t
         return redirect(url_for('users.dashboard'))
+    
+def generate_code():
+    # Generate a random 8-digit code
+    code = str(secrets.randbelow(10**8)).zfill(8)
+    
+    # Encrypt the code using SHA-256
+    encrypted_code = hashlib.sha256(code.encode()).hexdigest()
+    
+    return encrypted_code[:8]  # Return the first 8 characters of the encrypted code
+
+# Example usage:
+encrypted_code = generate_code()
+
+
 
 @user_bp.route('/addcompaign', methods = ['POST'])
 @login_required
 def addcompaign():
     form = CompaignForm()
+
+# Commit the changes to persist the deletion
+    
     if  form.validate_on_submit():
         name = form.name.data
+        while True:
+    # Generate a new URL code
+            url = generate_code()
+
+            # Check if the URL code already exists in the database
+            existing_compaign = db.session.query(Compaign).filter_by(url=url).first()
+            
+            # If the URL code doesn't exist, break out of the loop
+            if not existing_compaign:
+                break
         compain = Compaign(
             name = name,
-            owner_id = current_user.id
+            owner_id = current_user.id,
+            url = url
         )
         # Add the new user to the database session
         db.session.add(compain)

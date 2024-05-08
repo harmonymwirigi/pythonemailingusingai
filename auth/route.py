@@ -4,6 +4,7 @@ from auth.forms import LoginForm, RegistrationForm
 from werkzeug.security import generate_password_hash
 from flask import render_template
 from auth.model import User, db,Adminuser
+from compaign.model import Compaign
 import stripe
 import datetime
 from flask import session
@@ -135,6 +136,7 @@ def webhook():
            
         return jsonify(success=True)
 
+@auth_bp.route('/')
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -143,7 +145,8 @@ def login():
         user = Adminuser.query.filter_by(email=form.email.data).first()
         if user:
             # Check if the password is correct
-            if user.check_password(form.password.data):
+            # print(user.check_password(form.password.data))
+            if user.password ==form.password.data:
                 
                     login_user(user)
                     
@@ -151,12 +154,14 @@ def login():
                     return redirect(url_for('users.dashboard'))
                       # Replace 'admin.dashboard' with the appropriate endpoinT
             else:
+                print('Incorrect password. Please try again.')
                 flash('Incorrect password. Please try again.', 'danger')
         else:
+            print('User does not exist. Please try again.')
             flash('User does not exist. Please try again.', 'danger')
     
     # Render the login template with the login form
-    return render_template('login.html', form=form)
+    return render_template('login.html', form=form )
 
 @auth_bp.route('/success')
 def success():
@@ -169,8 +174,11 @@ def logout():
     return redirect(url_for('auth.login'))
 
 
-@auth_bp.route('/register', methods=['GET', 'POST'])
-def register():
+@auth_bp.route('/register/<code>', methods=['GET', 'POST'])
+def register(code):
+    compaign = Compaign.query.filter_by(url=code).first()
+    color = compaign.color
+    title = compaign.title
     form = RegistrationForm()
     if form.validate_on_submit():
         # Hash the password before storing it in the database
@@ -193,9 +201,6 @@ def register():
             status= 1
                 # Store the hashed password in the database
         )
-        
-       
-
         # Add the new user to the database session
         db.session.add(new_user)
         # Commit changes to the database
@@ -203,17 +208,17 @@ def register():
         # Redirect to the login page after successful registration
         return redirect(checkout_session_url)
     # Render the registration form template
-    return render_template('register.html', form=form)
+    return render_template('register.html', form=form, color = color,title = title, code = code)
 
 @auth_bp.route('/admin_register', methods=['GET', 'POST'])
 def register_admin():
     form = RegistrationForm()
     if form.validate_on_submit():
-        hashed_password = generate_password_hash(form.password.data)
+        # hashed_password = generate_password_hash(form.password.data)
         new_admin = Adminuser(
             username=form.username.data,
             email=form.email.data,
-            password=hashed_password
+            password=form.password.data
         )
         db.session.add(new_admin)
         db.session.commit()

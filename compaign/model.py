@@ -9,6 +9,9 @@ class Compaign(db.Model,UserMixin):
     open_api_key = db.Column(db.String(255), nullable=True)
     owner_id = db.Column(db.Integer, db.ForeignKey('adminuser.id'))
     users = db.relationship('User', backref='subscribers')
+    url = db.Column(db.String(500), nullable = True)
+    color = db.Column(db.String(50), nullable = True)
+    title = db.Column(db.String(100), nullable = True)
 
     def __repr__(self):
         return f"<compain(name='{self.name}'"

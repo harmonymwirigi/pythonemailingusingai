@@ -35,10 +35,9 @@
                 <div>
                     {% if compains %}
                     {% for compain in compains %}
-                    <a href="{{ url_for('compaigns.dashboard', compaign=compain.id) }}" class="btn btn-success">{{ compain.name }}</a>
+                        <a href="{{ url_for('compaigns.dashboard', compaign=compain.id) }}" class="btn btn-success campaign-link" data-compaign-id="{{ compain.id }}" onclick="changeButtonColor({{ compain.id }})">{{ compain.name }}</a>
                     {% endfor %}
-                   
-                    {% endif %}
+                {% endif %}
                   
                 </div>
                 <div> {% with messages = get_flashed_messages(with_categories=true) %}
@@ -89,7 +88,7 @@
         </div>
         <div class="inbox-body text-center">
             {% if current_user.openai_key == None  %}
-            <p class="text-white">Kindly Configure Your Open API Key to conposes email template</p>
+            <!-- <p class="text-white">Kindly Configure Your Open API Key to conposes email template</p> -->
             {% else %}
             <a href="#myModal" data-toggle="modal" title="Compose" class="btn btn-compose"> Compose</a>
             <!-- Modal -->
@@ -235,14 +234,14 @@
                 </a>
             </li>
             <li>
-                {% if current_user.openai_key == None  %}
-                <!-- <a  style="width: auto;height: auto;"> Config</a> -->
+                <!-- {% if current_user.openai_key == None  %}
+                 <a  style="width: auto;height: auto;"> Config</a> 
                 
                 <a href="#configmodal"  data-toggle="modal" title="Compose"><i class="fa fa-wrench"></i>
                     Config</a>
                 {% else %}
                 <a href="#configmodal"  data-toggle="modal" title="Compose" ><i class="fa fa-edit"></i> Update</a>
-                {% endif %}
+                {% endif %} -->
             </li>
            
           

@@ -16,7 +16,7 @@ from flask_login import LoginManager, login_user, logout_user, login_required, U
 app = Flask(__name__)
 admin = Admin()
 app.config['SECRET_KEY'] = 'your_secret_key_here'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///mailing.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://admin:Harmo36840568@mailingsolution.c1oku62s0o5m.ap-south-1.rds.amazonaws.com/mailing'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # Initialize Flask-Login
 login_manager = LoginManager()
@@ -44,8 +44,5 @@ app.register_blueprint(compaigns, url_prefix='/compaign')
 
 
 if __name__ == "__main__":
-    
-    with app.app_context():
-        # Create database tables
-        db.create_all()
+   
     app.run(debug=True)

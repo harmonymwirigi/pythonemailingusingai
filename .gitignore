@@ -2,3 +2,4 @@
 mailenv/
 email_env/
 migrations/
+.env/

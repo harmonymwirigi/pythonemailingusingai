@@ -8,6 +8,8 @@ class EmailTemplate(db.Model,UserMixin):
     header = db.Column(db.String(255), nullable=True)
     body = db.Column(db.Text, nullable=False)
     footer = db.Column(db.Text, nullable=False)
+    compaign = db.Column(db.Integer, nullable = True)
+    owner_id = db.Column(db.Integer, db.ForeignKey('adminuser.id'))
 
     def __repr__(self):
         return f"<EmailTemplate(name='{self.header}'"

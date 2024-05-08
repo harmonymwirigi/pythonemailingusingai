@@ -13,6 +13,7 @@ class Adminuser(db.Model, Base):
     email = db.Column(db.String(120), unique=True, nullable=False)
     username = db.Column(db.String(80),nullable=True)
     compaign = db.relationship('Compaign', backref='my_compain')
+    template = db.relationship('EmailTemplate', backref='my_templates')
     password = db.Column(db.String(128), nullable=True)
     
     def check_password(self, password):
@@ -30,7 +31,6 @@ class Adminuser(db.Model, Base):
 class User(db.Model,Base):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(128), nullable=True)
     customer_id = db.Column(db.String(200), nullable = True)
     payment_intent_id = db.Column(db.String(200), nullable = True)
     amount = db.Column(db.String(200), nullable=True)

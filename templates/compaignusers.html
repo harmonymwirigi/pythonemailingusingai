@@ -1,7 +1,7 @@
 <!-- dashboard.html -->
-{% extends "base.html" %}
+{% extends "compaignbase.html" %}
 {% block title %}
-    Mailing Solution
+    Admin Dashboard
 {% endblock %}
 
 
@@ -33,25 +33,20 @@
                                                     <table class="table table-inbox table-hover table-responsive">
                                                         <tr class="unread">
                                                            
-                                                            <th class="view-message  dont-show">Header</th>
-                                                            <th class="view-message">Body</th>
-                                                            <th class="view-message  dont-show">Footer</th>
+                                                            <th class="view-message  dont-show">Name</th>
+                                                            <th class="view-message">Email</th>
+                                                            <th class="view-message  dont-show">Amount</th>
                                                             <th class="view-message  dont-show">Action</th>
                                                         </th>
                                                         <tbody>
-                                                            {% for email_template in email_templates %}
+                                                            {% for user in users %}
                                                             <tr class="unread">
-                                                                <td class="view-message dont-show">{{ email_template.header }}</td>
-                                                                <td class="view-message">{{ email_template.body }}</td>
-                                                                <td class="view-message dont-show">{{ email_template.footer }}</td>
-                                                                <td class="view-message dont-show">
-                                                                    <form action="{{ url_for('users.generate_email_body') }}" method="post">
-                                                                        {{ tempform.hidden_tag() }}
-                                                                        <input type="hidden" name="template_id" value="{{ email_template.id }}">
-                                                                        <button type="submit" class="btn btn-success">Generate Email</button>
-                                                                    </form>
-                                                                </td>
-                                                            </tr>
+                                                              
+                                                                <td class="view-message  dont-show">{{ user.username }}</td>
+                                                                <td class="view-message">{{ user.email }}</td>
+                                                                <td class="view-message  dont-show">${{ user.amount }}</td>
+                                                                <td class="view-message  dont-show"><a class="btn btn-success"><i class="fa fa-eye"></i>view</a></td>
+                                                            </tr> 
                                                             {% endfor %}
                                                         </tbody>
                                                     </table>
