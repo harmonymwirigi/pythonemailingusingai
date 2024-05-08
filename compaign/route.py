@@ -132,6 +132,44 @@ def config(id):
         compain.open_api_key = key
         db.session.commit()  # Save the changes to t
         return redirect(url_for('compaigns.dashboard', compaign = id))
+
+# dcqw whew eoyq gyki
+@compaigns.route('/generate_email_body/<compaign>', methods=['POST'])
+@login_required
+def generate_email_body(compaign):
+    # Retrieve template ID from request (assuming it's sent via POST)
+    template_id = int(request.form.get('template_id'))  # Convert to integer
+    compain = Compaign.query.filter_by(id = compaign).first()
+    # Provide your OpenAI API key here
+    api_key = compain.open_api_key
+
+    client = OpenAI(api_key=api_key)
+
+    # Fetch email template from your database based on the template ID
+    # Replace this with your actual database retrieval logic
+    email_template = retrieve_email_template_from_database(template_id)
+    # Construct prompt for OpenAI API instructing to generate an email with specific parts
+    prompt = f"Generate an email with the following parts:\n\nHeader: {email_template.header}\n\nBody: {email_template.body}\n\nFooter: {email_template.footer}"
+    completion = client.completions.create(
+            model="gpt-3.5-turbo-instruct",
+            prompt=prompt,
+            max_tokens = 2400,
+            temperature = 1
+        )
+    response_text = completion.choices[0].text
+
     
+   # Fetch users from the database whose status is 2
+    users = User.query.filter_by(status=2).all()
+
+    # Send the generated email to each user
+    for user in users:
+        send_email(user.email, email_template.header, response_text)
+
+    # Flash a success message
+    flash("Emails sent successfully", "success")
+
+    # Redirect to the dashboard
+    return redirect(url_for('users.dashboard'))
 
     

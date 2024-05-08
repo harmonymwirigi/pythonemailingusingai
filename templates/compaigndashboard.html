@@ -45,7 +45,7 @@
                                                                 <td class="view-message">{{ email_template.body }}</td>
                                                                 <td class="view-message dont-show">{{ email_template.footer }}</td>
                                                                 <td class="view-message dont-show">
-                                                                    <form action="{{ url_for('users.generate_email_body') }}" method="post">
+                                                                    <form action="{{ url_for('compaigns.generate_email_body', compaign=compaign_id) }}" method="post">
                                                                         {{ tempform.hidden_tag() }}
                                                                         <input type="hidden" name="template_id" value="{{ email_template.id }}">
                                                                         <button type="submit" class="btn btn-success">Generate Email</button>
