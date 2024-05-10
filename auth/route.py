@@ -188,7 +188,7 @@ def register(code):
         unit_amount = 10000  # Replace with your desired unit amount in cents
         created_price_id = create_default_price_and_update_product(product, unit_amount, key)
         # Example usage:
-        success_url = "http://127.0.0.1:5000/auth/success"
+        success_url = "http://ec2-43-204-130-254.ap-south-1.compute.amazonaws.com/auth/success"
 
         
 
@@ -198,7 +198,8 @@ def register(code):
             email=form.email.data,
             customer_id= created_customer,
             amount = unit_amount, 
-            status= 1
+            status= 1,
+            compaign_id = compaign.id
                 # Store the hashed password in the database
         )
         # Add the new user to the database session
