@@ -177,15 +177,17 @@ def logout():
 @auth_bp.route('/register/<code>', methods=['GET', 'POST'])
 def register(code):
     compaign = Compaign.query.filter_by(url=code).first()
-    color = compaign.color
+    colo = compaign.color
     title = compaign.title
+    price = compaign.price
+    amount = price*100 
     form = RegistrationForm()
     if form.validate_on_submit():
         # Hash the password before storing it in the database
         # Create a new user instance with form data and hashed password
         created_customer = create_customer(form.email.data, key)
         
-        unit_amount = 10000  # Replace with your desired unit amount in cents
+        unit_amount = int(amount) # Replace with your desired unit amount in cents
         created_price_id = create_default_price_and_update_product(product, unit_amount, key)
         # Example usage:
         success_url = "http://ec2-43-204-130-254.ap-south-1.compute.amazonaws.com/auth/success"
@@ -209,7 +211,7 @@ def register(code):
         # Redirect to the login page after successful registration
         return redirect(checkout_session_url)
     # Render the registration form template
-    return render_template('register.html', form=form, color = color,title = title, code = code)
+    return render_template('register.html', form=form, color = colo,title = title, code = code)
 
 @auth_bp.route('/admin_register', methods=['GET', 'POST'])
 def register_admin():

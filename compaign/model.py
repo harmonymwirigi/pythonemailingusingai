@@ -12,6 +12,7 @@ class Compaign(db.Model,UserMixin):
     url = db.Column(db.String(500), nullable = True)
     color = db.Column(db.String(50), nullable = True)
     title = db.Column(db.String(100), nullable = True)
+    price = db.Column(db.Float(6,2), nullable = True)
 
     def __repr__(self):
         return f"<compain(name='{self.name}'"
