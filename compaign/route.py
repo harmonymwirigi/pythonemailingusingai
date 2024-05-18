@@ -76,6 +76,7 @@ def dashboard(compaign):
     compains = Compaign.query.filter_by(owner_id=current_user.id).all()
     this_campaign = Compaign.query.filter_by(id=compaign).first()
     check_key = this_campaign.open_api_key
+    code = this_campaign.url
     compaign_id = compaign
     db.session.commit() 
     
@@ -91,6 +92,7 @@ def dashboard(compaign):
                            compaign_id=compaign_id,
                            customizeform = customizeform, 
                            check_key=check_key,
+                           url = code,
                            active_compaign_id=int(compaign))  # Pass active_compaign_id to the template
 
 
@@ -101,9 +103,11 @@ def customize(campaign):
     if customizeform.validate_on_submit():
         title = customizeform.title.data
         color = customizeform.color.data
+        price = customizeform.price.data
         customize = Compaign.query.filter_by(id=campaign).first()
         customize.title  = title
         customize.color = color
+        customize.price = price
         db.session.commit()
         return redirect(url_for('compaigns.dashboard',compaign = campaign))
 
@@ -173,3 +177,4 @@ def generate_email_body(compaign):
     return redirect(url_for('users.dashboard'))
 
     
+ 
