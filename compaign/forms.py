@@ -7,4 +7,5 @@ from wtforms.validators import DataRequired, Email, EqualTo, Length
 class Customizeform(FlaskForm):
     title = StringField('Title')
     color = ColorField('Color', )
+    price = IntegerField('Price')
 
