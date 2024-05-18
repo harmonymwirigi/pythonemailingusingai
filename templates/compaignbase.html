@@ -211,6 +211,15 @@
                                             <span class="text-danger">{{ error }}</span>
                                         {% endfor %}
                                     </div>
+                                    <div class="form-group">
+                                        {{ customizeform.price.label(class="col-lg-2 control-label") }}
+                                    <div class="col-lg-10">
+                                        {{ customizeform.price(class="form-control", placeholder="") }}
+                                        {% for error in customizeform.price.errors %}
+                                            <span class="text-danger">{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
                                 </div>
                                 <div class="form-group">
                                         {{ customizeform.price.label(class="col-lg-2 control-label") }}
