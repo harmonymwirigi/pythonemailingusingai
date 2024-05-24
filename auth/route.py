@@ -9,7 +9,7 @@ import stripe
 import datetime
 from flask import session
 from flask_login import login_user, logout_user, login_required
-key = "sk_test_51OtZ2hDpVKhl93DHXsSMIbtcVTK8DIGS5Tt5dznFjBlmy8kq1006rdkHsH272Qsy94Oo08YXXo0YgMm3TT4H0FJ500rEd5CIXd"
+key = "sk_test_51OtZ2hDpVKhl93DHLGLN7FPuPSv5IfqG9AkkWFiosqVTI9cdbOzurfnv4TTXCKSNEzaBvZj7grXWEr9zeHPvlJpi00XA0mbCoc"
 product = "prod_Pk06dC0dgMFlxX"
 # This is your Stripe CLI webhook secret for testing your endpoint locally.
 endpoint_secret = 'whsec_8YBO1XbqNGKjcSSqkpHaON8zTbcozZci'
@@ -177,14 +177,21 @@ def logout():
 @auth_bp.route('/register/<code>', methods=['GET', 'POST'])
 def register(code):
     compaign = Compaign.query.filter_by(url=code).first()
+    if not compaign:
+        return redirect(url_for('auth.error', type= 2))
     colo = compaign.color
     title = compaign.title
     price = compaign.price
     amount = price*100 
     form = RegistrationForm()
     if form.validate_on_submit():
-        # Hash the password before storing it in the database
-        # Create a new user instance with form data and hashed password
+        # check if the email is register in this compaign
+        # Check if the email is already registered in this campaign
+        existing_user = User.query.filter_by(email=form.email.data, compaign_id=compaign.id).first()
+        # if it exist redirect to the error message
+        if existing_user:
+            return redirect(url_for('auth.error', type= 1))
+        # it does not exist continue with the registration
         created_customer = create_customer(form.email.data, key)
         
         unit_amount = int(amount) # Replace with your desired unit amount in cents
@@ -229,3 +236,15 @@ def register_admin():
         return redirect(url_for('auth.login'))
     return render_template('admin_register.html', form=form)
 
+@auth_bp.route('/error/<type>')
+def error(type):
+    message = ""
+    if type == '1':
+        message  =  "Sorry , You are not allowed to register in the same compaign twice";
+    if type == '2':
+        message = "Sorry, the compaign does not exist"
+    return render_template('404.html', message = message)
+
+@auth_bp.route('/email')
+def temp():
+    return render_template("email_template.html")

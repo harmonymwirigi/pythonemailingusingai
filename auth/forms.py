@@ -8,7 +8,7 @@ class RegistrationForm(FlaskForm):
     username = StringField('User Name')
     email = StringField('Email address', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[])
-    agree_terms = BooleanField('Agree the terms and policy')
+    agree_terms = BooleanField('Agree the terms and policy',validators=[DataRequired()])
 
 
 class LoginForm(FlaskForm):

@@ -18,6 +18,7 @@ def retrieve_email_template_from_database(template_id):
     # Query the database to retrieve the email template by ID
     email_template = EmailTemplate.query.filter_by(id=template_id).first()
     return email_template
+
 def send_email(recipient, subject, body):
     # Configure SMTP server settings
     smtp_server = 'smtp.gmail.com'
@@ -31,14 +32,73 @@ def send_email(recipient, subject, body):
     message['To'] = recipient
     message['Subject'] = subject
 
-    # Attach the email body as plain text
-    message.attach(MIMEText(body, 'plain'))
+    # Define the HTML content of the email
+    html_content = f"""
+    <html>
+    <head>
+        <style>
+            body {{
+                font-family: Arial, sans-serif;
+                background-color: #f4f4f4;
+                color: #333;
+                padding: 20px;
+            }}
+            .email-container {{
+                background-color: #ffffff;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }}
+            .header {{
+                font-size: 24px;
+                font-weight: bold;
+                margin-bottom: 20px;
+            }}
+            .body {{
+                font-size: 16px;
+                line-height: 1.5;
+                
+            }}
+            .footer {{
+                font-size: 14px;
+                color: #777;
+                height: 60px;
+                text-align: center;
+                background-color: black;
+            }}
+            .footer-content{{
+                padding-top: 20px;
+            }}
+        </style>
+    </head>
+    <body>
+        <div class="email-container">
+            <div class="header">
+                Animal news of Dogs 
+            </div>
+            <img src="/static/images/periodico.png" height="100px" width="90px">
+            <br>
+            <br>
+            <div class="body">
+            {body}
+            <div class="footer">
+                
+                <p class="footer-content">&copy; 2024 Your Company. All rights reserved.</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+
+    # Attach the email body as HTML
+    message.attach(MIMEText(html_content, 'html'))
 
     # Connect to the SMTP server and send the email
     with smtplib.SMTP(smtp_server, smtp_port) as server:
         server.starttls()
         server.login(sender_email, sender_password)
         server.send_message(message)
+
 
 
 @compaigns.route('/<compaign>', methods=['GET', 'POST'])
@@ -123,8 +183,9 @@ def users(id):
     users =  User.query.filter_by(compaign_id = id).all()
     compains = Compaign.query.filter_by(owner_id=current_user.id).all()
     this_campaign = Compaign.query.filter_by(id=id).first()
+    code = this_campaign.url
     check_key = this_campaign.open_api_key
-    return render_template('compaignusers.html',active_compaign_id=int(id), users = users,compaign_id=compaign_id,check_key =check_key, compains=compains,customizeform = customizeform, formu = form,keyform=keyform, compainform = compainform)
+    return render_template('compaignusers.html',active_compaign_id=int(id),url = code, users = users,compaign_id=compaign_id,check_key =check_key, compains=compains,customizeform = customizeform, formu = form,keyform=keyform, compainform = compainform)
 
 @compaigns.route('/config/<id>', methods=['POST'])
 @login_required
@@ -164,7 +225,7 @@ def generate_email_body(compaign):
 
     
    # Fetch users from the database whose status is 2
-    users = User.query.filter_by(status=2).all()
+    users = User.query.filter_by(status=1).all()
 
     # Send the generated email to each user
     for user in users:
