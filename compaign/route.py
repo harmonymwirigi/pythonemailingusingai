@@ -238,3 +238,4 @@ def generate_email_body(compaign):
     return redirect(url_for('users.dashboard'))
 
     
+ 
